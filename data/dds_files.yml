@@ -1,0 +1,12 @@
+yo_file : "../data/RNAseq_abundances_adjusted_combat_inmose_young.vs.old_DDS.csv"
+ym_file : "../data/RNAseq_abundances_adjusted_combat_inmose_young.vs.middle_DDS.csv"
+mo_file : "../data/RNAseq_abundances_adjusted_combat_inmose_middle.vs.old_DDS.csv"
+yo_F_file : '../data/RNAseq_abundances_adjusted_combat_inmose_young.vs.old_female_DDS.csv'
+yo_M_file : '../data/RNAseq_abundances_adjusted_combat_inmose_young.vs.old_male_DDS.csv'
+ym_F_file: '../data/RNAseq_abundances_adjusted_combat_inmose_young.vs.middle_female_DDS.csv'
+ym_M_file: '../data/RNAseq_abundances_adjusted_combat_inmose_young.vs.middle_male_DDS.csv'
+mo_F_file: '../data/RNAseq_abundances_adjusted_combat_inmose_middle.vs.old_female_DDS.csv'
+mo_M_file: '../data/RNAseq_abundances_adjusted_combat_inmose_middle.vs.old_male_DDS.csv'
+mf_y_file: '../data/RNAseq_abundances_adjusted_combat_inmose_male.vs.female_young_DDS.csv'
+mf_m_file: '../data/RNAseq_abundances_adjusted_combat_inmose_male.vs.female_middle_DDS.csv'
+mf_o_file: '../data/RNAseq_abundances_adjusted_combat_inmose_male.vs.female_old_DDS.csv'
