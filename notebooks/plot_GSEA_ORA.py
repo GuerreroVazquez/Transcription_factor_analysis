@@ -34,7 +34,7 @@ def plot_gsea_results(gsea_scores, msigdb, score_name=score_name, term=None):
 
 def plot_ora_results(ora_df, top_n=10, figsize=(10, 6), scale_odds_ratio=100, 
                      fontsize_title=16, fontsize_subtitle=14, fontsize_text=12,
-                     fdr_bar_size=[0.8, 0.15, 0.03, 0.5], bbox_to_anchor=(1.3, 1.05)):
+                     fdr_bar_size=[0.8, 0.15, 0.03, 0.5], bbox_to_anchor=(1.3, 1.05), title=None):
     """
     Creates a customized lollipop plot for ORA results, with bubble size for Odds Ratio and color for FDR p-value,
     including sample circles representing minimum, maximum, and median Odds Ratios positioned above the FDR bar.
@@ -49,7 +49,9 @@ def plot_ora_results(ora_df, top_n=10, figsize=(10, 6), scale_odds_ratio=100,
     fig: The figure object for further manipulation if needed.
     ax: The axes object with the plot.
     """
-    
+
+    if title is None:
+        title= f"Top {top_n} ORA Results by Combined Score"
     # Sort ORA results by Combined Score and select top N
     ora_top = ora_df.sort_values(by='Combined score', ascending=False).head(top_n).copy()
     
@@ -85,7 +87,7 @@ def plot_ora_results(ora_df, top_n=10, figsize=(10, 6), scale_odds_ratio=100,
     # Add labels and title, increasing the font size
     ax.set_xlabel("Combined Score", fontsize=fontsize_subtitle)
     ax.set_ylabel("Pathway", fontsize=fontsize_subtitle)
-    ax.set_title(f"Top {top_n} ORA Results by Combined Score", fontsize=fontsize_title)
+    ax.set_title(title, fontsize=fontsize_title)
     
     # Increase the font size for the y-axis labels (pathway names)
     ax.set_yticklabels(ora_top['Term'], fontsize=fontsize_text)
