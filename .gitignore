@@ -164,3 +164,8 @@ cython_debug/
 *.csv
 *.png
 *.pdf
+*.json
+*.bkp
+*.ods
+*.h5ad
+*.txt
