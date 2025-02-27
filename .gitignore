@@ -169,3 +169,4 @@ cython_debug/
 *.ods
 *.h5ad
 *.txt
+*.svg
