@@ -74,7 +74,7 @@ class Pathways:
             source='geneset',
             target='genesymbol'
         )
-        print(self.enr_pvals.head())
+        #print(self.enr_pvals.head())
         return self.enr_pvals
 
     def get_enriched_pathways(self, df):
@@ -88,6 +88,7 @@ class Pathways:
         degs = DE_df.index
         pathway_df = self.run_ora(degs)
         pathway_df = pathway_df[pathway_df['p-value'] < self.pathway_pvalue]
+        pathway_df.set_index("Term", inplace=True)  # Set "Term" as index
         enriched_pathways = pathway_df['Combined score']
 
         return enriched_pathways
@@ -99,7 +100,6 @@ class Pathways:
         pathways_dict = {}
         for comparison, dds in self.dds_dict.items():
             pathways = self.get_enriched_pathways(dds)
-            print(pathways.head())
             pathways_dict[comparison] = pathways
 
         all_scores_pathway_df=None
@@ -136,10 +136,14 @@ class Pathways:
 
         for pathway in enrriched_pathway_df.index:
             if pathway in msigdb.index:
-                genes = msigdb.loc[pathway, 'genesymbol']
-                gene_list.append(genes)
+                genes = msigdb.loc[pathway, "genesymbol"]
+                if isinstance(genes, pd.Series):  # If multiple values exist
+                    gene_list.append(genes.tolist())
+                else:  # Single value case
+                    gene_list.append([genes])
+                #gene_list.append(genes)
             else: 
-                pass#print (pathway)
+                print (pathway)
         enrriched_pathway_df['genes'] = gene_list
         
         return enrriched_pathway_df
