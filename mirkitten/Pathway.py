@@ -16,12 +16,14 @@ class Pathways:
                                   'go_biological_process',
                                   'reactome_pathways',
                                   'kegg_pathways', 'hallmark'], pvalue=0.05, threshold=None, interest='stat', pathway_pvalue=0.05):
+        if pathway_pvalue is None:
+            pathway_pvalue=0.05
         if "msigdb" in os.listdir('/home/amore/work/data'):
             msigdb = pd.read_csv('msigdb.csv')
         else:
             msigdb = dc.get_resource('MSigDB')
         self.msigdb =msigdb[msigdb['collection'].isin(sel_db)]
-        self.msigdb[~self.msigdb.duplicated(['geneset', 'genesymbol'])]
+        self.msigdb = self.msigdb[~self.msigdb.duplicated(['geneset', 'genesymbol'])]
         self.dds_dict = self._load_dds_files(dds_files_path=dds_dict)
         self.sel_db = sel_db
         self.pvalue = pvalue
@@ -64,7 +66,7 @@ class Pathways:
         return self.msigdb['collection'].unique()
     
     def run_ora(self, degs):
-        self.msigdb[~self.msigdb.duplicated(['geneset', 'genesymbol'])]
+        self.msigdb = self.msigdb[~self.msigdb.duplicated(['geneset', 'genesymbol'])]
         degs = [item for item in degs if "Unnamed" not in item and "NAN" not in item]
         self.enr_pvals = dc.get_ora_df(
             df=degs,
@@ -72,6 +74,8 @@ class Pathways:
             source='geneset',
             target='genesymbol'
         )
+        print(self.enr_pvals.head())
+        return self.enr_pvals
 
     def get_enriched_pathways(self, df):
         """
@@ -85,7 +89,7 @@ class Pathways:
         pathway_df = self.run_ora(degs)
         pathway_df = pathway_df[pathway_df['p-value'] < self.pathway_pvalue]
         enriched_pathways = pathway_df['Combined score']
-        
+
         return enriched_pathways
 
     def get_enriched_pathways_combined_ORA(self):
@@ -95,6 +99,7 @@ class Pathways:
         pathways_dict = {}
         for comparison, dds in self.dds_dict.items():
             pathways = self.get_enriched_pathways(dds)
+            print(pathways.head())
             pathways_dict[comparison] = pathways
 
         all_scores_pathway_df=None
@@ -110,6 +115,7 @@ class Pathways:
         pathway_df.to_csv(path)
     def set_enriched_ORA_pathway(self ):
         self.enriched_ORA_pathway = self.get_enriched_pathways_combined_ORA()
+        #print (self.enriched_ORA_pathway.head())
         
     def attach_gene_list_to_pathway(self, enrriched_pathway_df=None):
         """
@@ -129,8 +135,11 @@ class Pathways:
         gene_list = []
 
         for pathway in enrriched_pathway_df.index:
-            genes = msigdb.loc[pathway, 'genesymbol']
-            gene_list.append(genes)
+            if pathway in msigdb.index:
+                genes = msigdb.loc[pathway, 'genesymbol']
+                gene_list.append(genes)
+            else: 
+                pass#print (pathway)
         enrriched_pathway_df['genes'] = gene_list
         
         return enrriched_pathway_df
